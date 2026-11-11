@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block titulo %}Nuevo paciente{% endblock %}
+{% block eyebrow %}Registro{% endblock %}
+{% block h1 %}Nuevo paciente{% endblock %}
+{% block sub %}Completa la información básica. Los datos se guardan al instante en Supabase.{% endblock %}
+{% block arte %}{% include "ilustraciones/nuevo.html" %}{% endblock %}
+
+{% block contenido %}
+<section class="card">
+  <div class="card-h">
+    <div><h2>Datos del paciente</h2><p>Los campos con * son obligatorios.</p></div>
+  </div>
+  <div class="form-wrap">
+    <form action="/crear" method="post" class="form">
+      <label class="full">Nombre completo *
+        <input name="nombre" placeholder="Ej. María Fernanda López" required>
+      </label>
+      <label class="full">Dirección
+        <input name="direccion" placeholder="Barrio, ciudad">
+      </label>
+      <label>Género
+        <select name="genero">
+          <option>Femenino</option>
+          <option>Masculino</option>
+        </select>
+      </label>
+      <label>Edad *
+        <input name="edad" type="number" min="0" placeholder="0" required>
+      </label>
+      <label class="full">Teléfono
+        <input name="telefono" placeholder="300 000 0000">
+      </label>
+      <div class="form-actions">
+        <button class="btn">
+          <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Guardar paciente
+        </button>
+        <small>Al guardar irás al listado de pacientes.</small>
+      </div>
+    </form>
+    <aside class="tip">
+      {% include "ilustraciones/registro.html" %}
+      <b>Registro cuidadoso</b>
+      <p>Verifica el nombre y el teléfono antes de guardar: son los datos que usa el equipo para contactar al paciente.</p>
+    </aside>
+  </div>
+</section>
+{% endblock %}

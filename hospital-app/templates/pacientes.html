@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block titulo %}Pacientes{% endblock %}
+{% block eyebrow %}Directorio{% endblock %}
+{% block h1 %}Pacientes registrados{% endblock %}
+{% block sub %}Busca por ID o nombre, actualiza los datos o elimina registros.{% endblock %}
+{% block arte %}{% include "ilustraciones/pacientes.html" %}{% endblock %}
+
+{% block contenido %}
+<section class="card">
+  <div class="card-h">
+    <div><h2>Listado de pacientes</h2><p>Mostrando los registros más recientes.</p></div>
+  </div>
+
+  <form action="/pacientes" method="get" class="buscar">
+    <div class="in">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input name="q" value="{{ q }}" placeholder="Buscar por ID o nombre…">
+    </div>
+    <button class="btn">Buscar</button>
+    {% if q %}<a href="/pacientes" class="btn sec">Limpiar</a>{% endif %}
+  </form>
+  {% if q %}
+    <p class="resultado">{{ pacientes|length }} resultado(s) para «{{ q }}»</p>
+  {% endif %}
+
+  <div class="tabla">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Género</th><th>Edad</th><th>Teléfono</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+      {% for p in pacientes %}
+        {% set partes = (p.nombre or '?').split() %}
+        <tr style="--i:{{ loop.index0 if loop.index0 < 12 else 12 }}">
+          <td class="id">#{{ p.id }}</td>
+          <td>
+            <div class="who">
+              <span class="av {{ 'f' if p.genero == 'Femenino' }}">{{ (partes[0][0] ~ (partes[1][0] if partes|length > 1 else ''))|upper }}</span>
+              {{ p.nombre }}
+            </div>
+          </td>
+          <td><span class="tag {{ 'f' if p.genero == 'Femenino' else 'm' }}">{{ p.genero }}</span></td>
+          <td>{% if p.edad is not none %}{{ p.edad }} años{% else %}—{% endif %}</td>
+          <td class="tel">{{ p.telefono or '—' }}</td>
+          <td>
+            <div class="acciones">
+              <form action="/editar/{{ p.id }}" method="post">
+                <input name="nombre" value="{{ p.nombre }}" required aria-label="Nombre del paciente {{ p.id }}">
+                <button class="btn sec">Editar</button>
+              </form>
+              <form action="/eliminar/{{ p.id }}" method="post">
+                <button class="btn del">Eliminar</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      {% if not pacientes %}
+        <tr><td colspan="6" class="vacio">Sin resultados</td></tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
